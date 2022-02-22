@@ -77,6 +77,21 @@ EOF
     ]
   }
 
+  provisioner "file" {
+    source      = "configure/setup.sh"
+    destination = "/tmp/setup.sh"
+  }
+
+  provisioner "file" {
+    source      = "configure/app.service"
+    destination = "/tmp/app.service"
+  }
+
+  provisioner "shell" {
+    inline = [
+      "sh -cx 'sudo bash /tmp/setup.sh'"
+    ]
+  }
 
   provisioner "ansible-local" {
     playbook_file = "ansible/playbook.yml"
@@ -100,7 +115,7 @@ source qemu "debian" {
   disk_size   = 8000
   accelerator = "kvm"
 
-  headless = false
+  headless = true
 
   http_port_min  = 9990
   http_port_max  = 9999
